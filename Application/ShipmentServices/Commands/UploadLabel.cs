@@ -51,7 +51,7 @@ namespace Application.ShipmentServices.Commands
             if (shipment.State != ShipmentState.Created)
                 return Result<Guid>.Failure("Label can be uploaded only for Created shipments");
 
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = shipment.ShipmentEvents.FirstOrDefault(e => e.EventCode == "CREATED").CorrelationId ?? Guid.NewGuid().ToString();
 
             using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
@@ -63,7 +63,6 @@ namespace Application.ShipmentServices.Commands
 
                 var document = new ShipmentDocument
                 {
-                    Id = Guid.NewGuid(),
                     ShipmentId = shipment.Id,
                     BlobName = blobName,
                     ContentType = request.ContentType,
@@ -75,7 +74,6 @@ namespace Application.ShipmentServices.Commands
 
                 var shipmentEvent = new ShipmentEvent
                 {
-                    Id = Guid.NewGuid(),
                     ShipmentId = shipment.Id,
                     EventCode = "LABEL_UPLOADED",
                     EventTime = DateTime.UtcNow,

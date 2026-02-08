@@ -98,14 +98,13 @@ public class WorkerService : BackgroundService
 
             using var stream = await blobService.DownloadAsync(payload.BlobName);
 
-            if (stream.Length == 0)
+            if (stream.ReadByte() == -1)
             {
-                _logger.LogWarning("Label file is empty. BlobName: {BlobName}, Size: {Size} bytes, CorrelationId: {CorrelationId}, ShipmentId: {ShipmentId}",
-                    payload.BlobName, stream.Length, payload.CorrelationId, payload.ShipmentId);
+                _logger.LogWarning("Label file is empty. BlobName: {BlobName}, CorrelationId: {CorrelationId}, ShipmentId: {ShipmentId}",
+                    payload.BlobName, payload.CorrelationId, payload.ShipmentId);
 
                 shipment.ShipmentEvents.Add(new ShipmentEvent
                 {
-                    Id = Guid.NewGuid(),
                     ShipmentId = shipment.Id,
                     EventCode = "FAILED",
                     EventTime = DateTime.UtcNow,
@@ -130,7 +129,6 @@ public class WorkerService : BackgroundService
 
             shipment.ShipmentEvents.Add(new ShipmentEvent
             {
-                Id = Guid.NewGuid(),
                 ShipmentId = shipment.Id,
                 EventCode = "LABEL_PROCESSED",
                 EventTime = DateTime.UtcNow,
@@ -156,7 +154,6 @@ public class WorkerService : BackgroundService
 
             shipment.ShipmentEvents.Add(new ShipmentEvent
             {
-                Id = Guid.NewGuid(),
                 ShipmentId = shipment.Id,
                 EventCode = "FAILED",
                 EventTime = DateTime.UtcNow,
@@ -185,7 +182,6 @@ public class WorkerService : BackgroundService
 
                 shipment.ShipmentEvents.Add(new ShipmentEvent
                 {
-                    Id = Guid.NewGuid(),
                     ShipmentId = shipment.Id,
                     EventCode = "FAILED",
                     EventTime = DateTime.UtcNow,

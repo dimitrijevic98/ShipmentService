@@ -39,7 +39,6 @@ namespace Application.ShipmentServices.Commands
 
             var shipment = new Shipment
             {
-                Id = Guid.NewGuid(),
                 ReferenceNumber = request.ReferenceNumber,
                 SenderName = request.SenderName,
                 RecipientName = request.RecipientName,
@@ -50,7 +49,6 @@ namespace Application.ShipmentServices.Commands
 
             var shipmentEvent = new ShipmentEvent
             {
-                Id = Guid.NewGuid(),
                 ShipmentId = shipment.Id,
                 EventCode = "CREATED",
                 EventTime = DateTime.UtcNow,
