@@ -108,7 +108,7 @@ public class WorkerService : BackgroundService
                     ShipmentId = shipment.Id,
                     EventCode = "FAILED",
                     EventTime = DateTime.UtcNow,
-                    Payload = $"Empty label file. BlobName: {payload.BlobName}, Size: {stream.Length} bytes",
+                    Payload = $"Empty label file. BlobName: {payload.BlobName}",
                     CorrelationId = payload.CorrelationId
                 });
 
