@@ -45,7 +45,7 @@ builder.Services.AddScoped(typeof(IApplicationDbContext), typeof(ApplicationDbCo
             
 builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddScoped(typeof(IShipmentRepository), typeof(ShipmentRepository));
-builder.Services.AddScoped(typeof(IBlobService), typeof(BlobService));
+builder.Services.AddSingleton(typeof(IBlobService), typeof(BlobService));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger());

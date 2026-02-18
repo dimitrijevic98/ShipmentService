@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Models;
 using Application.ShipmentServices.Commands;
 using Application.ShipmentServices.Queries;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -35,9 +36,9 @@ namespace Api.Controllers
         } 
 
         [HttpGet]
-        public async  Task<ActionResult<Result<PagedResult<ShipmentDTO>>>> GetAllShipments()
+        public async  Task<ActionResult<Result<PagedResult<ShipmentDTO>>>> GetAllShipments(ShipmentState? state, int page = 1, int pageSize = 10)
         {
-            return await Mediator.Send(new GetAllShipments.Query());
+            return await Mediator.Send(new GetAllShipments.Query{Page = page, PageSize = pageSize, State = state});
         }
 
         [HttpGet("{id}")]

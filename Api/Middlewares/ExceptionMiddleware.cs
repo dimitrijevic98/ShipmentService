@@ -30,22 +30,13 @@ namespace Api.Middlewares
                 var response = context.Response;
                 response.ContentType = "application/json";
 
-                // _logger.LogError("Error: " + error.Message);
-                // _logger.LogError("Error Details: " + context.Request.Path);
-
-                // if (error.InnerException != null)
-                //     _logger.LogError("Inner Error: " + error.InnerException.Message);
-
-
-
-                // var errors = new Dictionary<string, string[]>();
                 Dictionary<string, string[]>? errors = null;
                 switch (error)
                 {
                     case NotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
-                    case BadRequestException bre:
+                    case BadRequestException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     case RequestFailedException:

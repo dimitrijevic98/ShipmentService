@@ -8,6 +8,7 @@ namespace Application.Models
 {
     public class ShipmentDTO
     {
+        public Guid Id { get; set; }
         public string ReferenceNumber { get; set; }
         public string SenderName { get; set; }
         public string RecipientName { get; set; }

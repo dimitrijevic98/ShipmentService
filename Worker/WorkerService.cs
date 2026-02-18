@@ -13,13 +13,15 @@ public class WorkerService : BackgroundService
     private readonly ServiceBusProcessor _processor;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IConfiguration _config;
+    private readonly IBlobService _blobService;
     private readonly ILogger<WorkerService> _logger;
 
     public WorkerService(ServiceBusClient busClient, IConfiguration config,
-        IServiceScopeFactory scopeFactory,ILogger<WorkerService> logger)
+        IServiceScopeFactory scopeFactory, IBlobService blobService, ILogger<WorkerService> logger)
     {
         _scopeFactory = scopeFactory;
         _config = config;
+        _blobService = blobService;
         _logger = logger;
 
         var queueName = config["Azure:ServiceBus:QueueName"];
@@ -71,7 +73,6 @@ public class WorkerService : BackgroundService
 
         using var scope = _scopeFactory.CreateScope();
         var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-        var blobService = scope.ServiceProvider.GetRequiredService<IBlobService>();
 
         var shipment = await unitOfWork.Shipments.GetShipmentByIdAsync(payload.ShipmentId);
 
@@ -82,7 +83,7 @@ public class WorkerService : BackgroundService
             await args.DeadLetterMessageAsync(args.Message, "Shipment not found");
             return;
         }
-
+ 
         try
         {
             if (shipment.ShipmentEvents.Any(e => e.EventCode == "LABEL_PROCESSED"))
@@ -96,7 +97,7 @@ public class WorkerService : BackgroundService
             _logger.LogInformation("Downloading blob {BlobName}. CorrelationId: {CorrelationId}, ShipmentId: {ShipmentId}",
                 payload.BlobName, payload.CorrelationId, payload.ShipmentId);
 
-            using var stream = await blobService.DownloadAsync(payload.BlobName);
+            using var stream = await _blobService.DownloadAsync(payload.BlobName);
 
             if (stream.ReadByte() == -1)
             {

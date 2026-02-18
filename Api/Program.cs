@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Api.Middlewares;
 using Application;
 using Infrastructure;
 using Infrastructure.Persistence;
@@ -46,6 +47,8 @@ catch (Exception e)
 }
 
 //app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseSerilogRequestLogging();
 

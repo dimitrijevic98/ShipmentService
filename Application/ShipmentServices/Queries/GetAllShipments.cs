@@ -14,8 +14,8 @@ namespace Application.ShipmentServices.Queries
     {
         public class Query : IRequest<Result<PagedResult<ShipmentDTO>>>
         {
-            public int Page { get; set; } = 1;
-            public int PageSize { get; set; } = 10;
+            public int Page { get; set; }
+            public int PageSize { get; set; }
             public ShipmentState? State { get; set; }
         }
 
@@ -44,6 +44,7 @@ namespace Application.ShipmentServices.Queries
 
                 var shipmentDTOs = shipments.Select(s => new ShipmentDTO
                 {
+                    Id = s.Id,
                     ReferenceNumber = s.ReferenceNumber,
                     SenderName = s.SenderName,
                     RecipientName = s.RecipientName,
